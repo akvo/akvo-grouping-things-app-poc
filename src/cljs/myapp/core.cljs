@@ -91,7 +91,11 @@
   :initialise-db
   (fn [_ _]
     {:tree [{:title "foo"
-             :children [{:title "bar"}]}]}))
+             :type "folder"
+             :children [{:title "bar"
+                         :type "folder"
+                         :children [{:title "bzzzz"
+                                     :type "survey"}]}]}]}))
 
 (defn init! []
   (rf/dispatch-sync [:initialise-db])

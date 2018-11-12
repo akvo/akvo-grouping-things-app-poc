@@ -48,7 +48,7 @@
 
 (defn tree-updated
   [{:keys [db]} [event new-tree]]
-  {:db (assoc db :tree new-tree)})
+  {:db (assoc db :tree (js->clj new-tree :keywordize-keys true))})
 
 (rf/reg-event-fx :update-tree tree-updated)
 

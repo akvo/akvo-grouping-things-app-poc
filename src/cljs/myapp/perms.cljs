@@ -10,4 +10,8 @@
      [:img {:src "/img/warning_clojure.png"}]
      (let [tree (rf/subscribe [:whole-tree])]
        [(r/adapt-react-class st) {:tree-data @tree
+                                  :can-node-have-children (fn [node]
+                                                            (=
+                                                              "folder"
+                                                              (:type (js->clj node :keywordize-keys true))))
                                   :on-change #(rf/dispatch [:update-tree %])}])]]])
