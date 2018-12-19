@@ -1,6 +1,7 @@
 {
-:port 4000
-:dev true
-:nrepl-port 7000
-:database-url "jdbc:postgresql://localhost/lumen?user=lumen"
-}
+ :port 3000
+ :dev true
+ :nrepl-port 7888
+ :database-url "jdbc:postgresql://rsrdbhost/lumen?user=lumen&password=lumenpasswd"
+ :nrepl-bind "0.0.0.0"
+ }

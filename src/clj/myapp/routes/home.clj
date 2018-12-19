@@ -11,7 +11,15 @@
 (defroutes home-routes
   (GET "/" []
        (home-page))
+  (GET "/tree" []
+    (response/ok (db/tree "4000001")))
+  (GET "/partial-tree" [from-node from-level to-level]
+    (response/ok (db/partial-tree "4000001"
+                   (Long/parseLong from-node)
+                   (Integer/parseInt from-level)
+                   (Integer/parseInt to-level))))
   (GET "/docs" []
        (-> (response/ok (-> "docs/docs.md" io/resource slurp))
            (response/header "Content-Type" "text/plain; charset=utf-8"))))
+
 

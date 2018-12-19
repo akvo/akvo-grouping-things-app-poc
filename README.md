@@ -1,21 +1,22 @@
 # myapp
 
-generated using Luminus version "3.10.12"
+### 1. Build ClojureScript external dependencies
 
-FIXME
+docker run -it -v `pwd`:/here kkarczmarczyk/node-yarn sh
+cd /here
+yarn add webpack webpack-cli
+yarn webpack
 
-## Prerequisites
+### 2. Start env
 
-You will need [Leiningen][1] 2.0 or above installed.
+1. start flow:
 
-[1]: https://github.com/technomancy/leiningen
+    docker-compose -f docker-compose.together.yml up --build -d
+    
+1. start grouping things app:
+     
+    docker-compose up --build -d
 
-## Running
-
-To start a web server for the application, run:
-
-    lein run 
-
-## License
-
-Copyright © 2018 FIXME
+1. Connect to the REPL (7888) and start figwheel `(start-fw)`
+1. Connect to the figwheel repl (7889) and start the CLJS repl `(cljs)`
+     

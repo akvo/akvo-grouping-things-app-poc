@@ -9,8 +9,7 @@
             [myapp.ajax :as ajax]
             [myapp.events]
             [secretary.core :as secretary]
-            [sortable-tree :as st]
-            [myapp.perms :as perms])
+            [sortable-tree :as st])
   (:import goog.History))
 
 ; the navbar components are implemented via baking-soda [1]
@@ -35,23 +34,29 @@
      [b/NavbarToggler {:on-click #(swap! expanded? not)}]
      [b/Collapse {:is-open @expanded? :navbar true}
       [b/Nav {:class-name "mr-auto" :navbar true}
-       [nav-link "#/" "Home" :home]
-       [nav-link "#/about" "About" :about]]]]))
-
-(comment
-  st
-  (myapp.core/mount-components))
+       [nav-link "#/" "Home" :home]]]]))
 
 (defn home-page []
   [:div.container
-   (when-let [docs @(rf/subscribe [:docs])]
-     [:div.row>div.col-sm-12
-      [:div {:dangerouslySetInnerHTML
-             {:__html (md->html docs)}}]])])
+   (let [tree (rf/subscribe [:whole-tree])]
+     [(r/adapt-react-class st) {:tree-data @tree
+
+                                :style {:height "800px"}
+                                :can-node-have-children (fn [node]
+                                                          (= "PROJECT_FOLDER" (.-type node)))
+                                :generate-node-props (fn [o]
+                                                       (let [node (.-node o)]
+                                                         (clj->js {:style {:boxShadow "0 0 0 4px"}
+                                                                   :buttons [(r/as-element [b/Button {:color "Danger"} "ho"])
+                                                                             (r/as-element [b/Badge {} "jo"])]})))
+                                :get-node-key (fn [node]
+                                                (.-id (.-node node)))
+                                :on-visibility-toggle (fn [event]
+                                                        (rf/dispatch [:node-toggle (js->clj event :keywordize-keys true)]))
+                                :on-change #(rf/dispatch [:update-tree %])}])])
 
 (def pages
-  {:home #'home-page
-   :about #'perms/about-page})
+  {:home #'home-page})
 
 (defn page []
   [:div
@@ -65,9 +70,6 @@
 
 (secretary/defroute "/" []
   (rf/dispatch [:navigate :home]))
-
-(secretary/defroute "/about" []
-  (rf/dispatch [:navigate :about]))
 
 ;; -------------------------
 ;; History
@@ -87,20 +89,20 @@
   (r/render [#'page] (.getElementById js/document "app")))
 
 
-(rf/reg-event-db
-  :initialise-db
-  (fn [_ _]
-    {:tree [{:title "foo"
-             :type "folder"
-             :children [{:title "bar"
-                         :type "folder"
-                         :children [{:title "bzzzz"
-                                     :type "survey"}]}]}]}))
+#_(rf/reg-event-db
+    :initialise-db
+    (fn [_ _]
+      {:tree [{:title "foo"
+               :type "folder"
+               :children [{:title "bar"
+                           :type "folder"
+                           :children [{:title "bzzzz"
+                                       :type "survey"}]}]}]}))
 
 (defn init! []
-  (rf/dispatch-sync [:initialise-db])
+  ;(rf/dispatch-sync [:initialise-db])
   (rf/dispatch-sync [:navigate :home])
   (ajax/load-interceptors!)
-  (rf/dispatch [:fetch-docs])
+  (rf/dispatch [:fetch-tree])
   (hook-browser-navigation!)
   (mount-components))

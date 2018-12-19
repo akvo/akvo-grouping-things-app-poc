@@ -1,0 +1,10 @@
+DROP SEQUENCE folder_id;
+--;;
+DROP TABLE user_node_role;
+--;;
+DROP TABLE role_perms;
+--;;
+DROP TABLE roles;
+--;;
+DROP TABLE folders;
+--;;

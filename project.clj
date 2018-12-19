@@ -58,7 +58,9 @@
   :figwheel
   {:http-server-root "public"
    :server-logfile "log/figwheel-logfile.log"
-   :nrepl-port 7002
+   :server-port 3449
+   :nrepl-host "0.0.0.0"
+   :nrepl-port 7889
    :css-dirs ["resources/public/css"]
    :nrepl-middleware
    [cider/wrap-cljs-repl cider.piggieback/wrap-cljs-repl]
@@ -92,7 +94,7 @@
    :dev [:project/dev :profiles/dev]
    :test [:project/dev :project/test :profiles/test]
 
-   :project/dev {:jvm-opts ["-Dconf=dev-config.edn"]
+   :project/dev {:jvm-opts ["-Dconf=env/dev/resources/config.edn"]
                  :dependencies [[binaryage/devtools "0.9.10"]
                                 [cider/piggieback "0.3.10"]
                                 [doo "0.1.10"]
@@ -123,7 +125,7 @@
                      :optimizations :none
                      :pretty-print true
                      :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
-                     :foreign-libs [{:file "hello-webpack/dist/index_bundle.js"
+                     :foreign-libs [{:file "react-libs/dist/index_bundle.js"
                                      :provides ["sortable-tree"]
                                      :global-exports {react React
                                                       react-dom ReactDOM
@@ -138,7 +140,7 @@
                  :repl-options {:init-ns user}
                  ;:injections
                  ; [(require 'pjstadig.humane-test-output) (pjstadig.humane-test-output/activate!)]
-                  }
+                 }
    :project/test {:jvm-opts ["-Dconf=test-config.edn"]
                   :resource-paths ["env/test/resources"]
                   :cljsbuild
