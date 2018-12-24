@@ -3,7 +3,7 @@
 ### 1. Build ClojureScript external dependencies
 
 docker run -it -v `pwd`:/here kkarczmarczyk/node-yarn sh
-cd /here
+cd /here/react-libs
 yarn add webpack webpack-cli
 yarn webpack
 
