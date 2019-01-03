@@ -41,7 +41,12 @@
                  [ring/ring-core "1.7.1"]
                  [ring/ring-defaults "0.3.2"]
                  [secretary "1.2.3"]
-                 [selmer "1.12.3"]]
+                 [selmer "1.12.3"]
+                 ;; GAE SDK
+                 [org.akvo/commons "0.4.2" :exclusions [[org.clojure/tools.reader]]]
+                 [com.google.appengine/appengine-tools-sdk "1.9.53"]
+                 [com.google.appengine/appengine-remote-api "1.9.53"]
+                 [com.google.appengine/appengine-api-1.0-sdk "1.9.53"]]
 
   :min-lein-version "2.0.0"
   
@@ -62,8 +67,10 @@
    :nrepl-host "0.0.0.0"
    :nrepl-port 7889
    :css-dirs ["resources/public/css"]
+   :hawk-options {:watcher :polling}
    :nrepl-middleware
-   [cider/wrap-cljs-repl cider.piggieback/wrap-cljs-repl]
+   #_[cider/wrap-cljs-repl cider.piggieback/wrap-cljs-repl]
+   [cider.piggieback/wrap-cljs-repl]
    }
   
 

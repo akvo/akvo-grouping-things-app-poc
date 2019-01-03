@@ -1,7 +1,7 @@
 (ns myapp.routes.home
   (:require [myapp.layout :as layout]
             [myapp.db.core :as db]
-            [compojure.core :refer [defroutes GET]]
+            [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :as response]
             [clojure.java.io :as io]))
 
@@ -12,9 +12,9 @@
   (GET "/" []
        (home-page))
   (GET "/tree" []
-    (response/ok (db/tree "4000001")))
+    (response/ok (db/tree "akvo.flow.user.test@gmail.com")))
   (GET "/partial-tree" [from-node from-level to-level]
-    (response/ok (db/partial-tree "4000001"
+    (response/ok (db/partial-tree "akvo.flow.user.test@gmail.com"
                    (Long/parseLong from-node)
                    (Integer/parseInt from-level)
                    (Integer/parseInt to-level))))

@@ -37,23 +37,37 @@
        [nav-link "#/" "Home" :home]]]]))
 
 (defn home-page []
-  [:div.container
-   (let [tree (rf/subscribe [:whole-tree])]
-     [(r/adapt-react-class st) {:tree-data @tree
+  [:div
+   (if-let [survey-id @(rf/subscribe [:selected-survey])]
+     [:div
+      [b/Button {:color "red"
+                 :type "button"
+                 :class "btn btn-danger"
+                 :on-click (fn []
+                             (rf/dispatch [:survey-selected nil]))} "close"]
+      [:frameset
+       [:frame {:src (str "http://localhost:8888/admin/indexAlone.html?survey_id=" survey-id)}]]]
+     [:div
+      (let [tree (rf/subscribe [:whole-tree])]
+        [(r/adapt-react-class st)
+         {:tree-data @tree
 
-                                :style {:height "800px"}
-                                :can-node-have-children (fn [node]
-                                                          (= "PROJECT_FOLDER" (.-type node)))
-                                :generate-node-props (fn [o]
-                                                       (let [node (.-node o)]
-                                                         (clj->js {:style {:boxShadow "0 0 0 4px"}
-                                                                   :buttons [(r/as-element [b/Button {:color "Danger"} "ho"])
-                                                                             (r/as-element [b/Badge {} "jo"])]})))
-                                :get-node-key (fn [node]
-                                                (.-id (.-node node)))
-                                :on-visibility-toggle (fn [event]
-                                                        (rf/dispatch [:node-toggle (js->clj event :keywordize-keys true)]))
-                                :on-change #(rf/dispatch [:update-tree %])}])])
+          :style {:height "800px"}
+          :can-node-have-children (fn [node]
+                                    (= "PROJECT_FOLDER" (.-type node)))
+          :generate-node-props (fn [o]
+                                 (let [node (.-node o)]
+                                   (if (= "PROJECT" (.-type node))
+                                     (clj->js {:style {:boxShadow "0 0 0 4px"}
+                                               :buttons [(r/as-element
+                                                           [b/Button {:color "red"
+                                                                      :on-click (fn []
+                                                                                  (rf/dispatch [:survey-selected (.-flowid node)]))} "open"])]}))))
+          :get-node-key (fn [node]
+                          (.-id (.-node node)))
+          :on-visibility-toggle (fn [event]
+                                  (rf/dispatch [:node-toggle (js->clj event :keywordize-keys true)]))
+          :on-change #(rf/dispatch [:update-tree %])}])])])
 
 (def pages
   {:home #'home-page})

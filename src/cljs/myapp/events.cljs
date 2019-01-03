@@ -89,7 +89,7 @@
                     :uri "/partial-tree"
                     :params {:from-node (:id node)
                              :from-level (+ 3 (count path))
-                             :to-level (+ 3 (count path))}
+                             :to-level (+ (* 3 2) (count path))}
                     :format (ajax/transit-request-format)
                     :response-format (ajax/transit-response-format)
                     :on-success [:set-tree-partial path]}
@@ -106,3 +106,14 @@
                   :format (ajax/transit-request-format)
                   :response-format (ajax/transit-response-format)
                   :on-success [:set-tree]}}))
+
+(rf/reg-sub :selected-survey (fn [db _]
+                               (:selected-survey db)))
+
+(rf/reg-event-db
+  :survey-selected
+  (fn [db [_ survey-id]]
+    (if survey-id
+      (assoc db :selected-survey survey-id)
+      (dissoc db :selected-survey))))
+

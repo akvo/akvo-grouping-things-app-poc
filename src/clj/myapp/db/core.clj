@@ -247,9 +247,10 @@
                       PERMS AS \n
                       (select parent_path from folders f,user_node_role u WHERE theuser=? and u.node=f.id) \n
                       select * from folders f WHERE nlevel(f.parent_path) <=3 AND (f.parent_path <@ ARRAY(select * FROM PERMS) OR f.parent_path @> ARRAY(select * FROM PERMS))" user-id])
-    (map #(clojure.set/rename-keys % {:name :title}))
+    (map #(clojure.set/rename-keys % {:name :title
+                                      :flow_id :flowid}))
     (map #(assoc % :full-path (full-path %)))
-    (map #(dissoc % :flow_id :parent_id :parent_path))
+    (map #(dissoc % :parent_id :parent_path))
     build-tree
     vals
     (sort-by :title)
@@ -262,9 +263,10 @@
                       PERMS AS \n
                       (select parent_path from folders f,user_node_role u WHERE theuser=? and u.node=f.id) \n
                       select * from folders f WHERE f.parent_path <@ ? AND nlevel(f.parent_path) >= ? AND nlevel(f.parent_path) <=? AND (f.parent_path <@ ARRAY(select * FROM PERMS) OR f.parent_path @> ARRAY(select * FROM PERMS))" user-id node-path from-level to-level])
-      (map #(clojure.set/rename-keys % {:name :title}))
+      (map #(clojure.set/rename-keys % {:name :title
+                                        :flow_id :flowid}))
       (map #(assoc % :full-path (full-path %)))
-      (map #(dissoc % :flow_id :parent_id :parent_path))
+      (map #(dissoc % :parent_id :parent_path))
       (build-tree)
       vals
       (sort-by :title)
